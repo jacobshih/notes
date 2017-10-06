@@ -1,7 +1,7 @@
 
 # docker
 
-1. [docker](#docker)
+1. [docker basic](#docker_basic)
 2. [install docker](#install_docker)
    1. [set up docker repository](#set_up_docker_repository)
    1. [install docker ce](#install_docker_ce)
@@ -11,6 +11,7 @@
    1. [run a docker and check ubuntu version of docker image](#run_a_docker_and_check_ubuntu_version_of_docker_image)
    1. [create a container](#create_a_container)
    1. [create a container with specified name](#create_a_container_with_specified_name)
+   1. [create a container with admin privilege](#create_a_container_with_admin_privilege)
    1. [start a container](#start_a_container)
    1. [stop a container](#stop_a_container)
    1. [attach local stdin, stdout and stderr streams to a running container](#attach_tty_io_to_a_running_container)
@@ -19,12 +20,14 @@
    1. [stop a container](#stop_a_container)
    1. [export container](#export_container)
    1. [import container](#import_container)
+4. [examples](#examples)
+   1. [create and install applcations in a ubuntu 14.04 container](#example_create_ubuntu_1404_container)
 
 ---
 
-<a name="docker" />
+<a name="docker_basic" />
 
-## docker
+## docker basic
 * Docker I/O
 * Repository
 * Image
@@ -125,6 +128,13 @@ docker create -it ubuntu:14.04
 docker create -it --name myubuntu_1404 ubuntu:14.04
 ```
 
+<a name="create_a_container_with_admin_privilege" />
+
+### create a container with admin privilege
+```
+docker create -it --name ubt1404 --privileged --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH ubuntu:14.04
+```
+
 <a name="start_a_container" />
 
 ### start a container
@@ -195,5 +205,37 @@ sudo docker export {ID} > mycontainer.tar
 ### import container
 ```
 cat mycontainer.tar | sudo docker export - test/ubuntu:v1.0
+```
+
+---
+
+<a name="examples" />
+
+## examples
+
+<a name="example_create_ubuntu_1404_container" />
+
+### create and install applcations in a ubuntu 14.04 container
+1. create a container with admin privilege and start it.
+```
+docker create -it --name ubt1404 --privileged --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH ubuntu:14.04
+docker start ubt1404
+docker attach ubt1404
+```
+
+2. install necessary applications in the container.
+```
+apt-get update
+apt-get install -y git wget curl samba nfs-kernel-server python
+```
+
+3. stop the container
+```
+docker stop ubt1404
+```
+
+4. export the container
+```
+docker export ubt1404 > ubt1404.tar
 ```
 
