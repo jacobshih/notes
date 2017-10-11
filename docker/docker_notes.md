@@ -16,8 +16,6 @@
    1. [stop a container](#stop_a_container)
    1. [attach local stdin, stdout and stderr streams to a running container](#attach_tty_io_to_a_running_container)
    1. [list container](#list_container)
-   1. [run a container](#run_a_container)
-   1. [stop a container](#stop_a_container)
    1. [export container](#export_container)
    1. [import container](#import_container)
 4. [examples](#examples)
@@ -125,7 +123,7 @@ docker create -it ubuntu:14.04
 
 ### create a container with specified name
 ```
-docker create -it --name myubuntu_1404 ubuntu:14.04
+docker create -it --name ubt1404 ubuntu:14.04
 ```
 
 <a name="create_a_container_with_admin_privilege" />
@@ -138,22 +136,34 @@ docker create -it --name ubt1404 --privileged --cap-add SYS_ADMIN --cap-add DAC_
 <a name="start_a_container" />
 
 ### start a container
+1. start a container with specified name
 ```
-docker start myubuntu_1404
+docker start ubt1404
+```
+
+2. start a container with specified id
+```
+sudo docker start -i {ID}
 ```
 
 <a name="stop_a_container" />
 
 ### stop a container
+1. stop a container with specified name
 ```
-docker stop myubuntu_1404
+docker stop ubt1404
+```
+
+2. stop a container with specified id
+```
+sudo docker stop {ID}
 ```
 
 <a name="attach_tty_io_to_a_running_container" />
 
 ### attach local stdin, stdout and stderr streams to a running container
 ```
-docker attach myubuntu_1404
+docker attach ubt1404
 ```
 
 <a name="list_container" />
@@ -177,20 +187,6 @@ docker ps -l
 4. to show only running containers
 ```
 docker ps
-```
-
-<a name="run_a_container" />
-
-### run a container
-```
-sudo docker start -i {ID}
-```
-
-<a name="stop_a_container" />
-
-### stop a container
-```
-sudo docker stop {ID}
 ```
 
 <a name="export_container" />
