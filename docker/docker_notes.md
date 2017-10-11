@@ -16,6 +16,7 @@
    1. [stop a container](#stop_a_container)
    1. [attach local stdin, stdout and stderr streams to a running container](#attach_tty_io_to_a_running_container)
    1. [list container](#list_container)
+   1. [create docker image](#create_docker_image)
    1. [export container](#export_container)
    1. [import container](#import_container)
 4. [examples](#examples)
@@ -189,6 +190,19 @@ docker ps -l
 docker ps
 ```
 
+<a name="create_docker_image" />
+
+### create docker image
+   - usage:
+```
+docker commit -m {message} -a {author} CONTAINER REPOSITORY:TAG
+```
+
+   - example:
+```
+docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404_arm-4.3.2 alphadocker/ubt1404_arm-4.3.2:0.00.01
+```
+
 <a name="export_container" />
 
 ### export container
@@ -220,9 +234,22 @@ docker attach ubt1404
 ```
 
 2. install necessary applications in the container.
+   - the necessary applications and tools.
 ```
 apt-get update
-apt-get install -y git wget curl samba nfs-kernel-server python
+apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server python
+```
+
+   - for arm 4.3.2 toolchain.
+```
+apt-get install -y lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+```
+
+   - install arm 4.3.2 toolchain
+```
+mkdir -p /usr/local/arm/4.3.2
+tar jxvf arm-2011.03.tar.bz2
+mv arm-2011.03/* /usr/local/arm/4.3.2/
 ```
 
 3. stop the container
@@ -230,8 +257,23 @@ apt-get install -y git wget curl samba nfs-kernel-server python
 docker stop ubt1404
 ```
 
-4. export the container
+4. create a docker image.
 ```
-docker export ubt1404 > ubt1404.tar
+docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404 alphadocker/ubt1404_arm-4.3.2:0.00.01
+```
+
+5. create a container from the created image.
+```
+docker run -it --name ubt1404_working alphadocker/ubt1404_arm-4.3.2:0.00.01
+```
+
+6. working.
+```
+mkdir -p /home/ipcam; cd /home/ipcam
+svn co http://172.19.176.90/hwtest/AHAL/AMD-H161
+svn co http://172.19.176.90/hwtest/AHAL/h
+cd AMD-H161/
+source source.arm
+make
 ```
 
