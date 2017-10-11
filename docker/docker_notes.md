@@ -234,40 +234,39 @@ docker attach ubt1404
 ```
 
 2. install necessary applications in the container.
-   - the necessary applications and tools.
 ```
 apt-get update
 apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server python
 ```
 
-   - for arm 4.3.2 toolchain.
+3. install necessary libraries for arm 4.3.2 toolchain in the container.
 ```
 apt-get install -y lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 ```
 
-   - install arm 4.3.2 toolchain
+4. install arm 4.3.2 toolchain.
 ```
 mkdir -p /usr/local/arm/4.3.2
 tar jxvf arm-2011.03.tar.bz2
 mv arm-2011.03/* /usr/local/arm/4.3.2/
 ```
 
-3. stop the container
+5. stop the container
 ```
 docker stop ubt1404
 ```
 
-4. create a docker image.
+6. create a docker image.
 ```
 docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404 alphadocker/ubt1404_arm-4.3.2:0.00.01
 ```
 
-5. create a container from the created image.
+7. create a container from the created image.
 ```
 docker run -it --name ubt1404_working alphadocker/ubt1404_arm-4.3.2:0.00.01
 ```
 
-6. working.
+8. working.
 ```
 mkdir -p /home/ipcam; cd /home/ipcam
 svn co http://172.19.176.90/hwtest/AHAL/AMD-H161
