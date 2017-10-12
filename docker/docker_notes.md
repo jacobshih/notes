@@ -10,15 +10,14 @@
    1. [list docker images](#list_docker_images)
    1. [run a docker and check ubuntu version of docker image](#run_a_docker_and_check_ubuntu_version_of_docker_image)
    1. [create a container](#create_a_container)
-   1. [create a container with specified name](#create_a_container_with_specified_name)
-   1. [create a container with admin privilege](#create_a_container_with_admin_privilege)
    1. [start a container](#start_a_container)
    1. [stop a container](#stop_a_container)
-   1. [attach local stdin, stdout and stderr streams to a running container](#attach_tty_io_to_a_running_container)
+   1. [attach to a running container](#attach_to_a_running_container)
    1. [list container](#list_container)
    1. [create docker image](#create_docker_image)
    1. [export container](#export_container)
    1. [import container](#import_container)
+
 4. [examples](#examples)
    1. [create and install applcations in a ubuntu 14.04 container](#example_create_ubuntu_1404_container)
 
@@ -92,77 +91,125 @@ docker run ubuntu:10.04 /bin/echo 'Hello docker'
 <a name="list_docker_images" />
 
 ### list docker images
+- usage
 ```
-docker images
+Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
 ```
+
+- list docker images
 ```
-jacob_shih:~$ docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-ubuntu              latest              f7b3f317ec73        5 months ago        117MB
-ubuntu              14.04               302fa07d8117        5 months ago        188MB
-ubuntu              10.04               e21dbcc7c9de        3 years ago         183MB
+jacob_shih:dockertest$ docker images
+REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+alphadocker/ubt1404_arm-4.3.2   0.00.01             091b0fc7e71f        17 hours ago        886MB
+ubuntu                          latest              f7b3f317ec73        5 months ago        117MB
+ubuntu                          14.04               302fa07d8117        6 months ago        188MB
+ubuntu                          10.04               e21dbcc7c9de        3 years ago         183MB
 ```
 
 <a name="run_a_docker_and_check_ubuntu_version_of_docker_image" />
 
 ### run a docker and check ubuntu version of docker image
 ```
-docker run ubuntu:10.04 lsb_release -a
+jacob_shih:dockertest$ docker run --rm ubuntu:10.04 lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 10.04 LTS
+Release:        10.04
+Codename:       lucid
 ```
+
 ```
-docker run ubuntu:14.04 lsb_release -a
+jacob_shih:dockertest$ docker run --rm ubuntu:14.04 lsb_release -a
+Distributor ID: Ubuntu
+Description:    Ubuntu 14.04.5 LTS
+Release:        14.04
+Codename:       trusty
+No LSB modules are available.
 ```
 
 <a name="create_a_container" />
 
 ### create a container
+
+- usage
+```
+Usage:  docker create [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Create a new container
+
+Options:
+  -e, --env list                       Set environment variables
+  -h, --hostname string                Container host name
+  -i, --interactive                    Keep STDIN open even if not attached
+      --link list                      Add link to another container
+      --name string                    Assign a name to the container
+  -p, --publish list                   Publish a container's port(s) to the host
+  -P, --publish-all                    Publish all exposed ports to random ports
+  -t, --tty                            Allocate a pseudo-TTY
+  -v, --volume list                    Bind mount a volume
+  -w, --workdir string                 Working directory inside the container
+```
+
+- create a container with default name
 ```
 docker create -it ubuntu:14.04
 ```
 
-<a name="create_a_container_with_specified_name" />
-
-### create a container with specified name
+- create a container with specified name
 ```
 docker create -it --name ubt1404 ubuntu:14.04
 ```
 
-<a name="create_a_container_with_admin_privilege" />
-
-### create a container with admin privilege
+- create a container with admin privilege
 ```
 docker create -it --name ubt1404 --privileged --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH ubuntu:14.04
+```
+
+- create a container with environment variables
+```
+docker create -it --name ubt1404 --env PATH=/home/hello --env HELLO=WORLD ubuntu:14.04
+```
+
+- mount a host folder to container
+```
+docker create -it --name ubt1404 -v /home/jacob_shih/temp/dockertest:/tmp/dockertest ubuntu:14.04
 ```
 
 <a name="start_a_container" />
 
 ### start a container
-1. start a container with specified name
+- usage
 ```
-docker start ubt1404
+Usage:  docker start [OPTIONS] CONTAINER [CONTAINER...]
 ```
 
-2. start a container with specified id
+- start a container with specified name
 ```
-sudo docker start -i {ID}
+docker start ubt1404
 ```
 
 <a name="stop_a_container" />
 
 ### stop a container
-1. stop a container with specified name
+- usage
+```
+Usage:  docker stop [OPTIONS] CONTAINER [CONTAINER...]
+```
+
+- stop a container with specified name
 ```
 docker stop ubt1404
 ```
 
-2. stop a container with specified id
+<a name="attach_to_a_running_container" />
+
+### attach to a running container
+- usage
 ```
-sudo docker stop {ID}
+Usage:  docker attach [OPTIONS] CONTAINER
 ```
 
-<a name="attach_tty_io_to_a_running_container" />
-
-### attach local stdin, stdout and stderr streams to a running container
+- attach local stdin, stdout and stderr streams to a running container
 ```
 docker attach ubt1404
 ```
@@ -170,22 +217,32 @@ docker attach ubt1404
 <a name="list_container" />
 
 ### list container
-1. to show only running containers
+- usage
+```
+Usage:  docker ps [OPTIONS]
+
+List containers
+
+Options:
+  -a, --all             Show all containers (default shows just running)
+```
+
+- to show only running containers
 ```
 docker ps
 ```
 
-2. to show all containers
+- to show all containers
 ```
 docker ps -a
 ```
 
-3. to show the latest created container
+- to show the latest created container
 ```
 docker ps -l
 ```
 
-4. to show only running containers
+- to show only running containers
 ```
 docker ps
 ```
@@ -193,28 +250,40 @@ docker ps
 <a name="create_docker_image" />
 
 ### create docker image
-   - usage:
+- usage:
 ```
 docker commit -m {message} -a {author} CONTAINER REPOSITORY:TAG
 ```
 
-   - example:
+- example:
 ```
-docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404_arm-4.3.2 alphadocker/ubt1404_arm-4.3.2:0.00.01
+docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404_arm-4.3.2 alphadocker/ubt1404_arm-4.3.2:0.01
 ```
 
 <a name="export_container" />
 
 ### export container
+- usage
 ```
-sudo docker export {ID} > mycontainer.tar
+Usage:  docker export [OPTIONS] CONTAINER
+```
+
+- export a container's filesystem as a tar archive
+```
+docker export ubt1404 > ubt1404.tar
 ```
 
 <a name="import_container" />
 
 ### import container
+- usage
 ```
-cat mycontainer.tar | sudo docker export - test/ubuntu:v1.0
+Usage:  docker import [OPTIONS] file|URL|- [REPOSITORY[:TAG]]
+```
+
+- import the contents from a tarball to create a filesystem image
+```
+cat ubt1404.tar | docker import - alphadocker/ubt1404:0.01
 ```
 
 ---
