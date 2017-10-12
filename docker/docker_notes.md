@@ -17,6 +17,8 @@
    1. [create docker image](#create_docker_image)
    1. [export container](#export_container)
    1. [import container](#import_container)
+   1. [save image](#save_image)
+   1. [load image](#load_image)
 
 4. [examples](#examples)
    1. [create and install applcations in a ubuntu 14.04 container](#example_create_ubuntu_1404_container)
