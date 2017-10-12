@@ -252,7 +252,7 @@ docker ps
 ### create docker image
 - usage:
 ```
-docker commit -m {message} -a {author} CONTAINER REPOSITORY:TAG
+docker commit [-m message] [-a author] CONTAINER REPOSITORY:TAG
 ```
 
 - example:
@@ -266,9 +266,17 @@ docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404_arm-4.3.2 alphadocker/ubt14
 - usage
 ```
 Usage:  docker export [OPTIONS] CONTAINER
+
+Options:
+  -o, --output string   Write to a file, instead of STDOUT
 ```
 
-- export a container's filesystem as a tar archive
+- export a container as a tar archive
+```
+docker export -o ubt1404.tar ubt1404
+```
+
+- export a container as a tar archive by redirecting stdout to a tar file
 ```
 docker export ubt1404 > ubt1404.tar
 ```
@@ -283,7 +291,44 @@ Usage:  docker import [OPTIONS] file|URL|- [REPOSITORY[:TAG]]
 
 - import the contents from a tarball to create a filesystem image
 ```
-cat ubt1404.tar | docker import - alphadocker/ubt1404:0.01
+docker import ubt1404.tar dockertest/ubt1404:0.01
+```
+
+- import docker image from stdin by concatenating tar file to stdout
+```
+cat ubt1404.tar | docker import - dockertest/ubt1404:0.01
+```
+
+<a name="save_image" />
+
+### save image
+- usage
+```
+Usage:  docker save [OPTIONS] IMAGE [IMAGE...]
+
+Options:
+  -o, --output string   Write to a file, instead of STDOUT
+```
+
+- save one or more images to a tar archive
+```
+docker save dockertest/ubt1404:0.01 -o saved_ubt1404.tar
+```
+
+<a name="load_image" />
+
+### load image
+- usage
+```
+Usage:  docker load [OPTIONS]
+
+Options:
+  -i, --input string   Read from tar archive file, instead of STDIN
+```
+
+- load an image from a tar archive
+```
+docker load --input saved_ubt1404.tar
 ```
 
 ---
@@ -327,12 +372,12 @@ docker stop ubt1404
 
 6. create a docker image.
 ```
-docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404 alphadocker/ubt1404_arm-4.3.2:0.00.01
+docker commit -m 'arm-4.3.2' -a 'jacob_shih' ubt1404 alphadocker/ubt1404_arm-4.3.2:0.01
 ```
 
 7. create a container from the created image.
 ```
-docker run -it --name ubt1404_working alphadocker/ubt1404_arm-4.3.2:0.00.01
+docker run -it --name ubt1404_working alphadocker/ubt1404_arm-4.3.2:0.01
 ```
 
 8. working.
@@ -345,3 +390,12 @@ source source.arm
 make
 ```
 
+9. to save the image to tar file.
+```
+docker save -o ubt1404_arm-4.3.2.tar alphadocker/ubt1404_arm-4.3.2:0.01
+```
+
+10. load the saved image (from another host maybe...)
+```
+docker load --input ubt1404_arm-4.3.2.tar
+```
