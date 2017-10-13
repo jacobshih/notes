@@ -21,7 +21,8 @@
    1. [load image](#load_image)
 
 4. [examples](#examples)
-   1. [create and install applcations in a ubuntu 14.04 container](#example_create_ubuntu_1404_container)
+   1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](#create_ubuntu_1404_container_for_arm_toolchain)
+   1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
 
 ---
 
@@ -339,9 +340,9 @@ docker load --input saved_ubt1404.tar
 
 ## examples
 
-<a name="example_create_ubuntu_1404_container" />
+<a name="create_ubuntu_1404_container_for_arm_toolchain" />
 
-### create and install applcations in a ubuntu 14.04 container
+### create a ubuntu 14.04 container for arm 4.3.2 toolchain
 1. create a container with admin privilege and start it.
 ```
 docker create -it --name ubt1404 --privileged --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH ubuntu:14.04
@@ -400,4 +401,58 @@ docker save -o ubt1404_arm-4.3.2.tar alphadocker/ubt1404_arm-4.3.2:0.01
 10. load the saved image (from another host maybe...)
 ```
 docker load --input ubt1404_arm-4.3.2.tar
+```
+
+---
+
+<a name="create_ubuntu_1604_container_for_meson_build_system" />
+
+### create a ubuntu 16.04 container for meson build system
+
+1. create a dockerfile for meson build system.
+```
+FROM ubuntu:16.04
+MAINTAINER jacob_shih
+WORKDIR /home
+
+# Update Ubuntu Software repository
+RUN apt-get update
+RUN apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server python
+RUN apt-get install -y python3 python3-pip ninja-build
+RUN pip3 install meson
+```
+
+2. build docker image from dockerfile.
+```
+docker build -f ubt1604_meson.dockerfile -t alphadocker/ubt1604_meson:0.01 .
+```
+
+3. create a container from the created image.
+```
+docker run -it --name ubt1604_meson_working --dns 172.19.10.100 alphadocker/ubt1604_meson:0.01
+```
+
+4. working.
+
+- maybe you will install anpm.
+- or check out source code and build it with meson/ninja.
+
+5. stop the container
+```
+docker stop ubt1604_meson_working
+```
+
+6. create a docker image.
+```
+docker commit -m 'meson build system and anpm' -a 'jacob_shih' ubt1604_meson_working alphadocker/ubt1604_meson_working:0.01
+```
+
+7. to save the image to tar file.
+```
+docker save -o ubt1604_meson_anpm.tar alphadocker/ubt1604_meson_working:0.01
+```
+
+8. load the saved image (from another host maybe...)
+```
+docker load --input ubt1604_meson_anpm.tar
 ```
