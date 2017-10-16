@@ -23,6 +23,7 @@
 4. [examples](#examples)
    1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](#create_ubuntu_1404_container_for_arm_toolchain)
    1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
+   1. [create a ubuntu 16.04 container for hc1892 sdk](#create_ubuntu_1604_container_for_hc1892_sdk)
 
 ---
 
@@ -456,3 +457,57 @@ docker save -o ubt1604_meson_anpm.tar alphadocker/ubt1604_meson_working:0.01
 ```
 docker load --input ubt1604_meson_anpm.tar
 ```
+
+---
+
+<a name="create_ubuntu_1604_container_for_hc1892_sdk" />
+
+### create a ubuntu 16.04 container for hc1892 sdk
+1. create a dockerfile for meson build system.
+```
+FROM ubuntu:16.04
+MAINTAINER jacob_shih
+WORKDIR /home
+
+# update ubuntu software repository
+RUN apt-get update
+
+# install necessary tools
+RUN apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server
+RUN apt-get install -y vim sudo
+RUN apt-get install -y u-boot-tools
+```
+
+2. build docker image from dockerfile.
+```
+docker build -f ubt1604_hc1892.dockerfile -t alphadocker/ubt1604_hc1892:0.01 .
+```
+
+- list the images.
+```
+jacob_shih:docker$ docker images
+REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+alphadocker/ubt1604_hc1892           0.01                90884c8daa67        17 minutes ago      534MB
+alphadocker/ubt1604_meson_20171016   0.01                e6089e941d76        3 hours ago         676MB
+alphadocker/ubt1604_meson            0.01                0209c09aa568        3 days ago          578MB
+ubuntu                               16.04               747cb2d60bbe        5 days ago          122MB
+ubuntu                               latest              f7b3f317ec73        5 months ago        117MB
+ubuntu                               14.04               302fa07d8117        6 months ago        188MB
+ubuntu                               10.04               e21dbcc7c9de        3 years ago         183MB
+```
+
+3. create a container from the created image.
+- create a container and run it.
+```
+docker run -it --name ubt1604_hc1892_20171016 --dns 172.19.10.100 alphadocker/ubt1604_hc1892:0.01
+```
+
+- or to mount a host folder to the container.
+```
+docker run -it --name ubt1604_hc1892_20171016 --dns 172.19.10.100 -v /home/jacob_shih/volumes/hc1892:/home alphadocker/ubt1604_hc1892:0.01
+```
+
+4. working.
+
+- check out source code and build it.
+
