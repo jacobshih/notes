@@ -467,31 +467,48 @@ docker load --input ubt1604_meson_anpm.tar
 ```
 FROM ubuntu:16.04
 MAINTAINER jacob_shih
-WORKDIR /home
 
 # update ubuntu software repository
 RUN apt-get update
 
 # install necessary tools
 RUN apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server
-RUN apt-get install -y vim sudo
-RUN apt-get install -y u-boot-tools
+RUN apt-get install -y sudo vim tzdata
+RUN apt-get install -y u-boot-tools cpio bc
+
+# reconfigure to use bash
+RUN echo no | dpkg-reconfigure dash
+
+# add user
+RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
+
+# allow sudo usage
+RUN echo "user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/user
+RUN chmod 0440 /etc/sudoers.d/user
+
+# run as a user
+USER user
+
+# set up working directory
+WORKDIR /home/user
+ENV HOME /home/user
 ```
 
 2. build docker image from dockerfile.
 ```
-docker build -f ubt1604_hc1892.dockerfile -t alphadocker/ubt1604_hc1892:0.01 .
+docker build -f ubt1604_hc1892_user.dockerfile -t alphadocker/ubt1604_hc1892_user:0.01 .
 ```
 
 - list the images.
 ```
-jacob_shih:docker$ docker images
+docker images
+```
+```
 REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
-alphadocker/ubt1604_hc1892           0.01                90884c8daa67        17 minutes ago      534MB
-alphadocker/ubt1604_meson_20171016   0.01                e6089e941d76        3 hours ago         676MB
-alphadocker/ubt1604_meson            0.01                0209c09aa568        3 days ago          578MB
-ubuntu                               16.04               747cb2d60bbe        5 days ago          122MB
-ubuntu                               latest              f7b3f317ec73        5 months ago        117MB
+alphadocker/ubt1604_hc1892_user      0.01                2f66e9ad088a        11 seconds ago      539MB
+alphadocker/ubt1604_meson_20171016   0.01                e6089e941d76        3 days ago          676MB
+alphadocker/ubt1604_meson            0.01                0209c09aa568        6 days ago          578MB
+ubuntu                               16.04               747cb2d60bbe        8 days ago          122MB
 ubuntu                               14.04               302fa07d8117        6 months ago        188MB
 ubuntu                               10.04               e21dbcc7c9de        3 years ago         183MB
 ```
@@ -499,15 +516,37 @@ ubuntu                               10.04               e21dbcc7c9de        3 y
 3. create a container from the created image.
 - create a container and run it.
 ```
-docker run -it --name ubt1604_hc1892_20171016 --dns 172.19.10.100 alphadocker/ubt1604_hc1892:0.01
+docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 alphadocker/ubt1604_hc1892_user:0.01
 ```
 
 - or to mount a host folder to the container.
 ```
-docker run -it --name ubt1604_hc1892_20171016 --dns 172.19.10.100 -v /home/jacob_shih/volumes/hc1892:/home alphadocker/ubt1604_hc1892:0.01
+docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 -v /home/jacob_shih/volumes/hc1892:/home/user alphadocker/ubt1604_hc1892_user:0.01
 ```
 
 4. working.
+- reconfigure timezone in new container.
+```
+sudo dpkg-reconfigure tzdata
+```
 
 - check out source code and build it.
+```
+svn checkout http://path.to/project/source working
+cd working
+source source.me
+make
+```
+
+5. save the image to tar file.
+```
+docker save -o ubt1604_hc1892_user-0.01.tar alphadocker/ubt1604_hc1892_user:0.01
+```
+
+6. load the saved image (from another host maybe...)
+```
+docker load --input ubt1604_hc1892_user-0.01.tar
+```
+
+---
 
