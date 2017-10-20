@@ -19,6 +19,7 @@
    1. [import container](#import_container)
    1. [save image](#save_image)
    1. [load image](#load_image)
+   1. [show history of image](#show_history_of_image)
 
 4. [examples](#examples)
    1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](#create_ubuntu_1404_container_for_arm_toolchain)
@@ -335,6 +336,19 @@ Options:
 docker load --input saved_ubt1404.tar
 ```
 
+<a name="show_history_of_image" />
+
+### show history of image
+- usage
+```
+Usage:  docker history [OPTIONS] IMAGE
+```
+
+- show the history of an image
+```
+docker history alphadocker/ubt1604_hc1892_user:0.01
+```
+
 ---
 
 <a name="examples" />
@@ -546,6 +560,33 @@ docker save -o ubt1604_hc1892_user-0.01.tar alphadocker/ubt1604_hc1892_user:0.01
 6. load the saved image (from another host maybe...)
 ```
 docker load --input ubt1604_hc1892_user-0.01.tar
+```
+
+7. show the history of the image.
+```
+Usage:  docker history [OPTIONS] IMAGE
+```
+
+```
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+2f66e9ad088a        16 hours ago        /bin/sh -c #(nop)  ENV HOME=/home/user          0B
+<missing>           16 hours ago        /bin/sh -c #(nop) WORKDIR /home/user            0B
+<missing>           16 hours ago        /bin/sh -c #(nop)  USER [user]                  0B
+<missing>           16 hours ago        /bin/sh -c chmod 0440 /etc/sudoers.d/user       29B
+<missing>           16 hours ago        /bin/sh -c echo "user ALL=(root) NOPASSWD:...   29B
+<missing>           16 hours ago        /bin/sh -c useradd -c 'docker user' -m -d ...   336kB
+<missing>           16 hours ago        /bin/sh -c echo no | dpkg-reconfigure dash      1.57MB
+<missing>           16 hours ago        /bin/sh -c apt-get install -y u-boot-tools...   1.64MB
+<missing>           16 hours ago        /bin/sh -c apt-get install -y sudo vim tzdata   52.3MB
+<missing>           16 hours ago        /bin/sh -c apt-get install -y git subversi...   322MB
+<missing>           16 hours ago        /bin/sh -c apt-get update                       39.1MB
+<missing>           6 days ago          /bin/sh -c #(nop)  MAINTAINER jacob_shih        0B
+<missing>           9 days ago          /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B
+<missing>           9 days ago          /bin/sh -c mkdir -p /run/systemd && echo '...   7B
+<missing>           9 days ago          /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   2.76kB
+<missing>           9 days ago          /bin/sh -c rm -rf /var/lib/apt/lists/*          0B
+<missing>           9 days ago          /bin/sh -c set -xe   && echo '#!/bin/sh' >...   745B
+<missing>           9 days ago          /bin/sh -c #(nop) ADD file:5b334adf9d9a225...   122MB
 ```
 
 ---
