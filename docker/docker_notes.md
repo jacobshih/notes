@@ -43,6 +43,18 @@
 
 ---
 
+## container vs.virtual machines
+* **virtual machine diagram**
+
+    <img src="https://www.docker.com/sites/default/files/VM%402x.png" width=450>
+
+* **container diagram**
+
+    <img src="https://www.docker.com/sites/default/files/Container%402x.png" width=450>
+
+
+---
+
 <a name="install_docker" />
 
 ## install docker
