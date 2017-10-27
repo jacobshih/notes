@@ -1,0 +1,32 @@
+@startuml
+
+title MovingObject class declaration
+
+package MovingObject {
+  class MovingObject {
+    #int x_comp
+    #int y_comp
+    #Box box
+    #Shape shape
+    +MovingObject(x_comp, y_comp)
+    +virtual ~MovingObject(x_comp, y_comp)
+    +is_approximately_equal(x_comp, y_comp) : bool
+    +draw() : void
+  }
+
+  class MovingObjectFactory {
+    +list<MovingObject> moving_objects
+    + {static} create(x_comp, y_comp) : MovingObject
+    + {static} find(x_comp, y_comp, rect) : MovingObject
+  }
+  note bottom
+    # create(), to create an instance of MovingObject.
+    # find(), to find an instance of MovingObject 
+        which has approximate vector and is adjacent
+        to the specified rect. create one if there 
+        is not any match.
+  end note
+}
+/'package MovingObject'/
+
+@enduml

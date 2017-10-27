@@ -1,0 +1,59 @@
+@startuml
+
+title shape classes declaration
+
+package shape {
+  class Shape {
+    #Rect rect
+    #list<Position> positions
+    #diameter
+    +get_rect() : const Rect&
+    +{abstract}draw() : void
+  }
+
+  class Rectangle {
+    +draw() : void
+  }
+
+  class Ellipse {
+    +draw() : void
+  }
+
+  class Circle {
+    +draw() : void
+  }
+
+  class Triangle {
+    +draw() : void
+  }
+
+  class Polygon {
+    +draw() : void
+  }
+
+  Shape <|-- Rectangle 
+  Shape <|-- Ellipse
+  Shape <|-- Circle
+  Shape <|-- Triangle
+  Shape <|-- Polygon
+
+  class ShapeFactory {
+    {static}+create(const Rect& rect, int diameter=0) : Shape
+    {static}+create(const list<Position>& positions) : Shape
+  }
+  note bottom
+    # create(rect): create a rectangle.
+    # create(rect, diameter): create a circle or ellipse.
+    # create(positions): create a triangle or polygon.
+  end note
+
+  Rectangle <-- ShapeFactory
+  Ellipse   <-- ShapeFactory
+  Circle    <-- ShapeFactory
+  Triangle  <-- ShapeFactory
+  Polygon   <-- ShapeFactory
+
+}
+/'package shape'/
+
+@enduml

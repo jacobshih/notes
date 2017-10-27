@@ -1,0 +1,39 @@
+@startuml
+
+start
+
+while (is there mv data in buffer?) is (yes)
+  if (mv data is not zero) then (yes)
+    :Rect rect = get_block_rect();
+    note right
+      get_block_rect(), calculate the 
+      position and size of the block.
+    end note
+    :MovingObject mo = 
+        MovingObjectFactory.find(x_comp, y_comp, rect);
+    :mo.box.add(rect);
+    note right
+      mo.box contains a set of mutual 
+      adjacent Rect instances, it marks
+      the bounding area of the object.
+    end note
+  else (no)
+  endif
+endwhile (no)
+
+:...;
+note right
+  one pass loop cannot find an exact object 
+  which may be split to several boxes.
+end note
+
+:MovingObjectFactory::merge_objects();
+
+note right
+  merge the intersect or 
+  adjacent objects to one.
+end note
+
+stop
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+
+title Box/Rect classes declaration
+
+package box {
+  class Rect {
+    #int x
+    #int y
+    #int w
+    #int h
+  }
+
+  class Position {
+    #int x
+    #int y
+  }
+
+  class Box {
+    #list<Rect> rects
+    #Rect rect
+    +get_rect() : const Rect&
+    +is_adjacent(const Rect& rect)
+    +is_intersect(const Rect& rect)
+    +joint(const Box& box)
+    +add(const Rect& rect)
+    +remove(const Rect& rect)
+  }
+  note right
+    #class 'Box' contains a set of mutual 
+        adjacent Rect instances.
+    #the member 'rects' are the position 
+        and size of the adjacent blocks
+        which compose the moving object.
+    #the member 'rect' is the bounding 
+        box of the moving object.
+  end note
+
+  Box "1" *-- "n" Rect
+}
+/'package box'/
+
+@enduml

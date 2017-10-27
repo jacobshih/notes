@@ -1,0 +1,29 @@
+@startuml
+
+partition MovingObjectFactory::find {
+start
+
+floating note right
+  x_comp, horizontal moving vector
+  y_comp, vertical moving vector
+  rect, position and size of the mv block
+end note
+
+repeat
+  if (is mv data approximate equal to mv data of moving_object) then (yes)
+      if (is rect adjacent with bounding box of moving_object) then (yes)
+        break
+      endif
+  endif
+repeat while (is there instance in list moving_objects) is (yes)
+
+if (is moving_object found) then (no)
+  :create a MovingObject instance;
+else (yes)
+endif
+
+:return the moving_object;
+stop
+}
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+
+start
+
+:initialization;
+note right
+  1.video channel index
+  2.motion vector channel index
+  3.whether to get image data
+end note
+
+while (thread_start?) is (yes)
+  :MPI_getTmvData;
+  partition "process mv data" {
+    :find moving objects from mv data;
+    :draw bounding box;
+    :calculate central point;
+    :draw moving direction;
+  }
+  :MPI_releaseTmvData;
+endwhile (no)
+
+stop
+@enduml
