@@ -2,6 +2,15 @@
 
 title Box/Rect classes declaration
 
+class OSD << Singleton >> {
+  +{static}get_instance() : OSD
+  +draw()
+  +draw_line(from_x, from_y, to_x, to_y)
+  +draw_rect(x, y, w, h)
+  +draw_circle(x, y, radius)
+  +draw_text(x, y, font, size, text)
+}
+
 package box {
   class Rect {
     #int x
@@ -36,6 +45,7 @@ package box {
   end note
 
   Box "1" *-- "n" Rect
+  OSD <.. Box
 }
 /'package box'/
 
