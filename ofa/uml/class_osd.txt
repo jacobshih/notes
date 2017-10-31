@@ -1,0 +1,27 @@
+@startuml
+
+title OSD class declaration
+
+package osd {
+  abstract class Graph {
+    +{abstract}draw()
+    +{abstract}draw_line(from_x, from_y, to_x, to_y)
+    +{abstract}draw_rect(x, y, w, h)
+    +{abstract}draw_circle(x, y, radius)
+    +{abstract}draw_text(x, y, font, size, text)
+  }
+
+  class OSD << Singleton >> {
+    +{static}get_instance() : OSD
+    +draw()
+    +draw_line(from_x, from_y, to_x, to_y)
+    +draw_rect(x, y, w, h)
+    +draw_circle(x, y, radius)
+    +draw_text(x, y, font, size, text)
+  }
+
+  Graph <|-- OSD
+}
+/'package osd'/
+
+@enduml

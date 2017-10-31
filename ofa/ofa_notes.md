@@ -1,6 +1,7 @@
 OFA notes
 ===
 1. [classes](#classes)
+   1. [Graph/OSD](#class_osd)
    1. [Rect](#class_box)
    1. [Position](#class_box)
    1. [Box](#class_box)
@@ -17,6 +18,14 @@ OFA notes
 <a name="classes" />
 
 ## classes
+
+---
+
+<a name="class_osd" />
+
+### Graph/OSD
+
+![Graph/OSD](http://www.plantuml.com/plantuml/png/bP4x3i8m38RtdC8RHHIneue9YP610rGcDIKY95LYnBDtnsq1CLGy5bksFplvRJPi2PQhEMYBCK91uWEoyKwf2lKEIm8V2xWg05n73gZvmIu2Ljks032wFejr4V2O3FkokJMEaatm-_oKGklFAR1l8h7d_gP0cXCX13sciEs7j0dQqWCBM9X3x0UPJizf6-yuXMWk9CzBkccebPXENhEKB8ELSQKbzWvcivVOoB8YNPV4kN4IE4t94APDJqUyB-4FwHy4Vv7vixZkQjbjF6v_Mwl9uEtEWyaT)
 
 ---
 
