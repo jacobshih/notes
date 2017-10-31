@@ -13,6 +13,7 @@
    1. [start a container](#start_a_container)
    1. [stop a container](#stop_a_container)
    1. [attach to a running container](#attach_to_a_running_container)
+   1. [docker run](#docker_run)
    1. [list container](#list_container)
    1. [create docker image](#create_docker_image)
    1. [export container](#export_container)
@@ -229,6 +230,35 @@ Usage:  docker attach [OPTIONS] CONTAINER
 - attach local stdin, stdout and stderr streams to a running container
 ```
 docker attach ubt1404
+```
+
+<a name="docker_run" />
+
+### docker run
+- usage
+```
+Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Run a command in a new container
+
+Options:
+  -a, --attach list                    Attach to STDIN, STDOUT or STDERR
+  -d, --detach                         Run container in background and print container ID
+      --dns list                       Set custom DNS servers
+  -e, --env list                       Set environment variables
+  -i, --interactive                    Keep STDIN open even if not attached
+      --mount mount                    Attach a filesystem mount to the container
+      --name string                    Assign a name to the container
+  -p, --publish list                   Publish a container's port(s) to the host
+      --rm                             Automatically remove the container when it exits
+  -t, --tty                            Allocate a pseudo-TTY
+  -v, --volume list                    Bind mount a volume
+  -w, --workdir string                 Working directory inside the container
+```
+
+- to start the process in the container and attach the console to the process's stdin, stdout and stderr.
+```
+docker run -it --name mytest ubuntu:14.04
 ```
 
 <a name="list_container" />
@@ -502,9 +532,6 @@ RUN apt-get install -y git subversion build-essential wget curl samba nfs-kernel
 RUN apt-get install -y sudo vim tzdata
 RUN apt-get install -y u-boot-tools cpio bc
 
-# reconfigure to use bash
-RUN echo no | dpkg-reconfigure dash
-
 # add user
 RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
 
@@ -512,8 +539,14 @@ RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
 RUN echo "user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/user
 RUN chmod 0440 /etc/sudoers.d/user
 
+# reconfigure to use bash
+RUN echo no | dpkg-reconfigure dash
+
+# initialize the user profile from the skeleton profile
+RUN cp /etc/skel/.bashrc /home/user/.bashrc
+
 # run as a user
-USER user
+CMD ["su", "user", "-c", "/bin/bash"]
 
 # set up working directory
 WORKDIR /home/user
@@ -547,7 +580,7 @@ docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 alphadocker/ubt160
 
 - or to mount a host folder to the container.
 ```
-docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 -v /home/jacob_shih/volumes/hc1892:/home/user alphadocker/ubt1604_hc1892_user:0.01
+docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo:/home/user/repo alphadocker/ubt1604_hc1892_user:0.01
 ```
 
 4. working.

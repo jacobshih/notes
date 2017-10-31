@@ -19,6 +19,9 @@ RUN chmod 0440 /etc/sudoers.d/user
 # reconfigure to use bash
 RUN echo no | dpkg-reconfigure dash
 
+# initialize the user profile from the skeleton profile
+RUN cp /etc/skel/.bashrc /home/user/.bashrc
+
 # run as a user
 CMD ["su", "user", "-c", "/bin/bash"]
 
