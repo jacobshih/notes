@@ -555,7 +555,7 @@ ENV HOME /home/user
 
 2. build docker image from dockerfile.
 ```
-docker build -f ubt1604_hc1892_user.dockerfile -t alphadocker/ubt1604_hc1892_user:0.01 .
+docker build -f ubt1604_hc1892_user.dockerfile -t alphadocker/ubt1604_hc1892_user:0.02 .
 ```
 
 - list the images.
@@ -564,23 +564,48 @@ docker images
 ```
 ```
 REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
-alphadocker/ubt1604_hc1892_user      0.01                2f66e9ad088a        11 seconds ago      539MB
-alphadocker/ubt1604_meson_20171016   0.01                e6089e941d76        3 days ago          676MB
-alphadocker/ubt1604_meson            0.01                0209c09aa568        6 days ago          578MB
-ubuntu                               16.04               747cb2d60bbe        8 days ago          122MB
+alphadocker/ubt1604_hc1892_user      0.01                ea55005d7402        2 days ago          539MB
+alphadocker/ubt1604_hc1892_user      0.02                ea55005d7402        2 days ago          539MB
+alphadocker/ubt1604_hc1892_1031      0.01                ea55005d7402        2 days ago          539MB
+alphadocker/ubt1604_meson_20171016   0.01                e6089e941d76        2 weeks ago         676MB
+alphadocker/ubt1404_arm-4.3.2        0.01                3226ca45cfe8        2 weeks ago         886MB
+ubuntu                               16.04               747cb2d60bbe        3 weeks ago         122MB
 ubuntu                               14.04               302fa07d8117        6 months ago        188MB
 ubuntu                               10.04               e21dbcc7c9de        3 years ago         183MB
 ```
 
 3. create a container from the created image.
-- create a container and run it.
+- create a container.
 ```
-docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 alphadocker/ubt1604_hc1892_user:0.01
+docker create -it --name ubt1604_hc1892_user --dns 172.19.10.100 alphadocker/ubt1604_hc1892_user:0.02
 ```
 
 - or to mount a host folder to the container.
 ```
-docker run -it --name ubt1604_hc1892_user --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo:/home/user/repo alphadocker/ubt1604_hc1892_user:0.01
+docker create -it --name ubt1604_hc1892_user --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1604_hc1892_user:0.02
+```
+
+- start the container.
+```
+docker start ubt1604_hc1892_user
+```
+
+- execute the container.
+```
+docker exec -it ubt1604_hc1892_user su user -c /bin/bash
+```
+
+- note: use **docker run** to create and run a container may cause **fakeroot** forcing to exit the container.
+```
+jacob_shih:containers$ docker run -it --name ubt1604_hc1892_1031 --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo:/home/user/repo alphadocker/ubt1604_hc1892_1031:0.01
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+user@841eb4aba2e5:~$
+user@841eb4aba2e5:~$
+user@841eb4aba2e5:~$ fakeroot ls -l
+total 4
+drwxrwxr-x 6 root root 4096 Oct 31 02:27 repo
+jacob_shih:containers$
 ```
 
 4. working.
