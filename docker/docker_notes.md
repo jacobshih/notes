@@ -608,6 +608,10 @@ drwxrwxr-x 6 root root 4096 Oct 31 02:27 repo
 jacob_shih:containers$
 ```
 
+- **docker run** vs **docker exec**
+
+  [https://stackoverflow.com/a/35592000](https://stackoverflow.com/a/35592000)
+
 4. working.
 - reconfigure timezone in new container.
 ```
