@@ -1,11 +1,11 @@
 @startuml
-
 title MovingObject class declaration
 
 package MovingObject {
   class MovingObject {
     #int x_comp
     #int y_comp
+    #MVConfig config
     #Box box
     #Shape shape
     +MovingObject(x_comp, y_comp)
@@ -21,12 +21,43 @@ package MovingObject {
   }
   note bottom
     # create(), to create an instance of MovingObject.
-    # find(), to find an instance of MovingObject 
+    # find(), to find an instance of MovingObject
         which has approximate vector and is adjacent
-        to the specified rect. create one if there 
+        to the specified rect. create one if there
         is not any match.
   end note
+
+  MVConfig "1" ..* MovingObject
+  Box "1" ..* MovingObject
 }
 /'package MovingObject'/
 
+class MVConfig << Singleton >> {
+  +{static}get_instance() : MVConfig
+  #IConfig config
+  #buffer_number
+  #precision
+  #block_size
+  #video_encoder_type
+  +init()
+  +get_buffer_number()
+  +get_precision()
+  +get_block_size()
+  +get_video_encoder_type()
+  +set_buffer_number()
+  +set_precision()
+  +set_block_size()
+  +set_video_encoder_type()
+}
+
+class Box {
+  #list<Rect> rects
+  #Rect rect
+  +get_rect() : const Rect&
+  +is_adjacent(const Rect& rect)
+  +is_intersect(const Rect& rect)
+  +joint(const Box& box)
+  +add(const Rect& rect)
+  +remove(const Rect& rect)
+}
 @enduml

@@ -1,0 +1,52 @@
+@startuml
+
+title configuration classes declaration
+
+package configuration {
+  abstract class IConfig {
+    +{abstract}init()
+    +{abstract}add(const string& key, const string& value)
+    +{abstract}get(const string& key, string& value)
+    +{abstract}set(const string& key, const string& value)
+    +{abstract}del(const string& key)
+    +{abstract}load(const string& file_path)
+    +{abstract}save(const string& file_path)
+  }
+
+  class MVConfig << Singleton >> {
+    +{static}get_instance() : MVConfig
+    #IConfig config
+    #buffer_number
+    #precision
+    #block_size
+    #video_encoder_type
+    +init()
+    +get_buffer_number()
+    +get_precision()
+    +get_block_size()
+    +get_video_encoder_type()
+    +set_buffer_number()
+    +set_precision()
+    +set_block_size()
+    +set_video_encoder_type()
+  }
+
+  IConfig <|-- IConfigSimpleText
+  note bottom
+    IConfigSimpleText implements the 
+    interfaces of IConfig by accessing 
+    a text file configuration.
+  end note
+
+  IConfig <|-- IConfigLibCfg
+  note bottom
+    IConfigLibCfg implements the 
+    interfaces of IConfig by calling 
+    corresponding functions of libcfg.
+  end note
+  
+  MVConfig *-down- "1" IConfig
+}
+/'package configuration'/
+
+@enduml
