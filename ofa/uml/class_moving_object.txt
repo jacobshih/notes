@@ -5,7 +5,6 @@ package MovingObject {
   class MovingObject {
     #int x_comp
     #int y_comp
-    #MVConfig config
     #Box box
     #Shape shape
     +MovingObject(x_comp, y_comp)
@@ -27,7 +26,7 @@ package MovingObject {
         is not any match.
   end note
 
-  MVConfig "1" ..* MovingObject
+  MVConfig <.. MovingObject
   Box "1" ..* MovingObject
 }
 /'package MovingObject'/
