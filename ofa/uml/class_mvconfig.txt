@@ -11,6 +11,7 @@ package configuration {
     +{abstract}del(const string& key)
     +{abstract}load(const string& file_path)
     +{abstract}save(const string& file_path)
+    +dump()
   }
 
   class MVConfig << Singleton >> {
@@ -31,20 +32,33 @@ package configuration {
     +set_video_encoder_type()
   }
 
-  IConfig <|-- IConfigSimpleText
+  class ConfigSimpleText {
+    +init()
+    +add(const string& key, const string& value)
+    +get(const string& key, string& value)
+    +set(const string& key, const string& value)
+    +del(const string& key)
+    +load(const string& file_path)
+    +save(const string& file_path)
+    +dump()
+    -read_config_file(const string& file_path)
+    -write_config_file(const string& file_path)
+  }
+
+  IConfig <|-- ConfigSimpleText
   note bottom
-    IConfigSimpleText implements the 
-    interfaces of IConfig by accessing 
+    ConfigSimpleText implements the
+    interfaces of IConfig by accessing
     a text file configuration.
   end note
 
-  IConfig <|-- IConfigLibCfg
+  IConfig <|-- ConfigLibCfg
   note bottom
-    IConfigLibCfg implements the 
-    interfaces of IConfig by calling 
+    ConfigLibCfg implements the
+    interfaces of IConfig by calling
     corresponding functions of libcfg.
   end note
-  
+
   MVConfig *-down- "1" IConfig
 }
 /'package configuration'/

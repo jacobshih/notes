@@ -13,15 +13,31 @@ class OSD << Singleton >> {
 
 package box {
   class Rect {
-    #int x
-    #int y
-    #int w
-    #int h
+    +int x
+    +int y
+    +int w
+    +int h
+    +left()
+    +right()
+    +top()
+    +bottom()
+    +is_left_shared()
+    +is_right_shared()
+    +is_top_shared()
+    +is_bottom_shared()
+    +is_adjacent()
+    +is_interset()
   }
 
-  class Position {
-    #int x
-    #int y
+  class Point {
+    +int x
+    +int y
+    +operator<()
+    +operator>()
+    +operator==()
+    +operator=()
+    +operator+()
+    +operator-()
   }
 
   class Box {
@@ -35,12 +51,12 @@ package box {
     +remove(const Rect& rect)
   }
   note right
-    #class 'Box' contains a set of mutual 
+    #class 'Box' contains a set of mutual
         adjacent Rect instances.
-    #the member 'rects' are the position 
+    #the member 'rects' are the position
         and size of the adjacent blocks
         which compose the moving object.
-    #the member 'rect' is the bounding 
+    #the member 'rect' is the bounding
         box of the moving object.
   end note
 

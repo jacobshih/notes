@@ -14,7 +14,7 @@ class OSD << Singleton >> {
 package shape {
   class Shape {
     #Rect rect
-    #list<Position> positions
+    #list<Point> points
     #diameter
     +get_rect() : const Rect&
     +{abstract}draw() : void
@@ -40,7 +40,7 @@ package shape {
     +draw() : void
   }
 
-  Shape <|-- Rectangle 
+  Shape <|-- Rectangle
   Shape <|-- Ellipse
   Shape <|-- Circle
   Shape <|-- Triangle
@@ -48,12 +48,12 @@ package shape {
 
   class ShapeFactory {
     {static}+create(const Rect& rect, int diameter=0) : Shape
-    {static}+create(const list<Position>& positions) : Shape
+    {static}+create(const list<Point>& points) : Shape
   }
   note bottom
     # create(rect): create a rectangle.
     # create(rect, diameter): create a circle or ellipse.
-    # create(positions): create a triangle or polygon.
+    # create(points): create a triangle or polygon.
   end note
 
   Rectangle <-- ShapeFactory
@@ -61,7 +61,7 @@ package shape {
   Circle    <-- ShapeFactory
   Triangle  <-- ShapeFactory
   Polygon   <-- ShapeFactory
-  
+
   OSD <.. Shape
 
 }

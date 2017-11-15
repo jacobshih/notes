@@ -26,8 +26,11 @@ package MovingObject {
         is not any match.
   end note
 
+  MovingObject <.. MovingObjectFactory
   MVConfig <.. MovingObject
   Box "1" ..* MovingObject
+  MotionVector "1" ..* MovingObject
+  Point <|-- MotionVector
 }
 /'package MovingObject'/
 
@@ -59,4 +62,16 @@ class Box {
   +add(const Rect& rect)
   +remove(const Rect& rect)
 }
+
+class Point {
+  +int x
+  +int y
+  +operator<()
+  +operator>()
+  +operator==()
+  +operator=()
+  +operator+()
+  +operator-()
+}
+
 @enduml
