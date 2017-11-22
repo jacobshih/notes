@@ -12,7 +12,7 @@ end note
 while (thread_start?) is (yes)
   :MPI_getTmvData;
   partition "process mv data" {
-    :find moving objects from mv data;
+    :process_mv_data();
     :draw bounding box;
     :calculate central point;
     :draw moving direction;

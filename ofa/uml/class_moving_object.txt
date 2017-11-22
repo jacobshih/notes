@@ -3,34 +3,64 @@ title MovingObject class declaration
 
 package MovingObject {
   class MovingObject {
-    #int x_comp
-    #int y_comp
+    #MotionVector mv
     #Box box
     #Shape shape
-    +MovingObject(x_comp, y_comp)
-    +virtual ~MovingObject(x_comp, y_comp)
-    +is_approximately_equal(x_comp, y_comp) : bool
-    +draw() : void
+    +MovingObject(const MotionVector& mv)
+    +virtual ~MovingObject()
+    +is_same_vector(const MotionVector& mv) : bool
+    +draw_box() : void
   }
 
   class MovingObjectFactory {
-    +list<MovingObject> moving_objects
-    + {static} create(x_comp, y_comp) : MovingObject
-    + {static} find(x_comp, y_comp, rect) : MovingObject
+    +MovingObjects moving_objects
+    +create(const MotionVector& mv) : MovingObject
+    +find(const MotionVector& mv) : MovingObject
+    +clear()
+    +process_motion_vector()
+    -process_puzzle()
   }
   note bottom
     # create(), to create an instance of MovingObject.
-    # find(), to find an instance of MovingObject
-        which has approximate vector and is adjacent
-        to the specified rect. create one if there
-        is not any match.
+    # find(), to find a MovingObject instance matching
+        the specified motion vector and is adjacent or
+        intersected with the given box.
+    # clear(), to clear the object list.
+    # process_motion_vector(), to run a loop to parse
+        the motion vector buffer to generate boxes with
+        the same motion vector.
+    # process_puzzle(), to compose object with 
+        intersected or adjacent boxes.
   end note
 
-  MovingObject <.. MovingObjectFactory
+  class Puzzle {
+    +BoxMap boxmap
+    +add(const MotionVector& mv, const Rect& rect) : Box*
+    +find(const MotionVector& mv) : Boxes*
+  }
+  note bottom
+    # add(), to add a rectangle to the box matching 
+        with the specified motion vector. it creates
+        a new box if cannot find a matching one.
+    # find(), to find a list of boxes that match the
+        specified motion vector.
+  end note
+
+  class MotionVector {
+    +short int x
+    +short int y
+  }
+
+  MovingObjects ..* MovingObjectFactory
+  MovingObject <.. MovingObjects
+  BoxMap "1" ..* Puzzle
+  Puzzle <.. MovingObjectFactory
   MVConfig <.. MovingObject
   Box "1" ..* MovingObject
+  Rects "1" ..* Box
+  Rect "1" ..* Box
   MotionVector "1" ..* MovingObject
-  Point <|-- MotionVector
+  TPoint <|-- MotionVector : <short int>
 }
 /'package MovingObject'/
 
@@ -53,19 +83,20 @@ class MVConfig << Singleton >> {
 }
 
 class Box {
-  #list<Rect> rects
+  #Rects rects
   #Rect rect
   +get_rect() : const Rect&
+  +get_rects() : const Rects&
   +is_adjacent(const Rect& rect)
-  +is_intersect(const Rect& rect)
-  +joint(const Box& box)
+  +is_intersected(const Rect& rect)
+  +merge(const Box& box)
   +add(const Rect& rect)
   +remove(const Rect& rect)
 }
 
-class Point {
-  +int x
-  +int y
+class TPoint<T> {
+  +T x
+  +T y
   +operator<()
   +operator>()
   +operator==()
@@ -73,5 +104,9 @@ class Point {
   +operator+()
   +operator-()
 }
+
+class "map<MotionVector, Boxes*>" as BoxMap
+class "vector<Rect>" as Rects
+class "vector<MovingObject*>" as MovingObjects
 
 @enduml

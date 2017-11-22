@@ -1,0 +1,35 @@
+@startuml
+
+partition process_puzzle {
+start
+
+partition "traverse boxmap" {
+while (is there pair of motion vector \nand box list (boxes)?) is (yes)
+  partition "traverse box list (boxes)" {
+  while (is there box in boxes?) is (yes)
+    :MovingObject* object = find(mv, box);
+    note right
+     find object matching the motion vector
+     and is adjacent or intersected with the box;
+    endnote
+    if (object is found) then (yes)
+    else (no)
+      :object = create(mv);
+      note right
+       create an object and
+       add to object list
+      endnote
+    endif
+    :object.box.merge(box);
+    note right
+     merge the box to the object 
+    endnote
+  endwhile (no)
+  }
+endwhile (no)
+}
+
+stop
+}
+
+@enduml

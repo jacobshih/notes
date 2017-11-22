@@ -45,6 +45,16 @@ package configuration {
     -write_config_file(const string& file_path)
   }
 
+  class ConfigLibCfg {
+    +init()
+    +add(const string& key, const string& value)
+    +get(const string& key, string& value)
+    +set(const string& key, const string& value)
+    +del(const string& key)
+    +load(const string& file_path)
+    +save(const string& file_path)
+  }
+
   IConfig <|-- ConfigSimpleText
   note bottom
     ConfigSimpleText implements the

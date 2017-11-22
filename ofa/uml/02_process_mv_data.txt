@@ -1,0 +1,50 @@
+@startuml
+
+partition "MovingObjectFactory.process_mv_data()" {
+start
+
+while (is there mv data in buffer?) is (yes)
+  if (mv data is not zero) then (yes)
+    :Rect rect(x, y, w, h);
+    note right
+      position and size
+      of the block.
+    end note
+    partition "puzzle.add()" {
+      :get the box list (boxes) matching the mv data;
+      note right
+        # puzzle contains a boxmap that maps
+            the box lists (boxes) to the same
+            motion vector.
+        # the box list is a set of boxes with
+            same motion vector.
+      end note
+
+      :find the box with which the \nblock is adjacent or intersected;
+
+      if (is box found?) then (yes)
+      else (no)
+        :create a new box and \nadd to box list (boxes);
+      endif
+      :add the block to the box;
+      note right
+        # if a block is adjacent or intersected
+            with a box, it will be added to the box.
+        # when a block is added to a box, the box
+            will expand itself to cover the block.
+      end note
+    }
+  endif
+endwhile (no)
+
+:process_puzzle();
+
+note right
+  merge the intersect or
+  adjacent boxes to one object.
+end note
+
+stop
+}
+
+@enduml

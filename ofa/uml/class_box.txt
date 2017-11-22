@@ -21,12 +21,14 @@ package box {
     +right()
     +top()
     +bottom()
-    +is_left_shared()
-    +is_right_shared()
-    +is_top_shared()
-    +is_bottom_shared()
+    +is_left_of()
+    +is_right_of()
+    +is_above()
+    +is_below()
+    +is_empty()
     +is_adjacent()
-    +is_interset()
+    +is_intersected()
+    +unite_with()
   }
 
   class Point {
@@ -45,8 +47,8 @@ package box {
     #Rect rect
     +get_rect() : const Rect&
     +is_adjacent(const Rect& rect)
-    +is_intersect(const Rect& rect)
-    +joint(const Box& box)
+    +is_intersected(const Rect& rect)
+    +merge(const Box& box)
     +add(const Rect& rect)
     +remove(const Rect& rect)
   }
