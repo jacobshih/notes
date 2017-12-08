@@ -20,6 +20,10 @@ OFA notes
    1. [one object and two boxes](#test_3)
    1. [two objects with different motion vector](#test_4)
    1. [multiple objects](#test_5)
+1. [special scenarios](#special_scenarios)
+   1. [motion vectors differ in hands and feet of a walking human](#scenario_1)
+   1. [overlapped objects moving apart](#scenario_2)
+   1. [shadow effect](#scenario_3)
 
 ---
 <a name="classes" />
@@ -297,3 +301,42 @@ bounding box:   104 48 16 16
 motion vector:  0x0005 0xffff
 bounding box:   8 56 8 8
 ```
+
+----
+<a name="special_scenarios" />
+
+## special scenarios
+
+<a name="scenario_1" />
+
+### motion vectors differ in hands and feet of a walking human
+
+- consider a walking human, the motion vector of left hand may be positive where the right hand is negative or vice versa.
+- how to group the adjacent blocks of different motion vectors to an object?
+
+![scenario_1](https://imgur.com/yklONkL.png)
+
+----
+
+<a name="scenario_2" />
+
+### overlapped objects moving apart
+
+- is there way to distinguish two (or more) overlapped objects from MV data?
+- if the motion vectors of the objects are slightly different, it might be grouped to an object when those are overlapped.
+
+![scenario_2](https://imgur.com/Mhw9Cnp.gif)
+
+----
+
+<a name="scenario_3" />
+
+### shadow effect
+
+- in ideal conditions, two separate objects can be recognized easily.
+
+![scenario_3_1](https://imgur.com/biHMqPy.png)
+
+- if shadow of one overlaps with another, the separate objects might be grouped into one.
+
+![scenario_3_2](https://imgur.com/PekWPyA.png)
