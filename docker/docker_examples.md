@@ -4,7 +4,7 @@
 1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](#create_ubuntu_1404_container_for_arm_toolchain)
 1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
 1. [create a ubuntu 16.04 container for hc1892 sdk](#create_ubuntu_1604_container_for_hc1892_sdk)
-1. [create a ubuntu 16.04 container for dhpw310ava1](#create_ubuntu_1604_container_for_dhpw310ava1)
+1. [create a ubuntu 14.04 container for dhpw310ava1](#create_ubuntu_1404_container_for_dhpw310ava1)
 
 ---
 
@@ -129,7 +129,7 @@ docker load --input ubt1604_meson_anpm.tar
 <a name="create_ubuntu_1604_container_for_hc1892_sdk" />
 
 ### create a ubuntu 16.04 container for hc1892 sdk
-1. create a dockerfile for meson build system.
+1. create a dockerfile for hc1892 sdk.
 ```
 FROM ubuntu:16.04
 MAINTAINER jacob_shih
@@ -274,21 +274,70 @@ IMAGE               CREATED             CREATED BY                              
 ```
 
 ---
-<a name="create_ubuntu_1604_container_for_dhpw310ava1" />
+<a name="create_ubuntu_1404_container_for_dhpw310ava1" />
 
-### create a ubuntu 16.04 container for dhpw310ava1
-1. create a dockerfile for meson build system.
+### create a ubuntu 14.04 container for dhpw310ava1
+1. create a dockerfile for dhpw310ava1.
 ```
-FROM ubuntu:16.04
-MAINTAINER jacob_shih
+# FROM ioft/i386-ubuntu_core
+FROM ubuntu:14.04
+MAINTAINER jacob_shih "jacob_shih@alphanetworks.com"
+
+# +++ https://github.com/ioft/dockerhub/blob/master/i386-ubuntu/Dockerfile
+
+RUN echo '#!/bin/sh' > /usr/sbin/policy-rc.d \
+&& echo 'exit 101' >> /usr/sbin/policy-rc.d \
+&& chmod +x /usr/sbin/policy-rc.d \
+\
+&& dpkg-divert --local --rename --add /sbin/initctl \
+&& cp -a /usr/sbin/policy-rc.d /sbin/initctl \
+&& sed -i 's/^exit.*/exit 0/' /sbin/initctl \
+\
+&& echo 'force-unsafe-io' > /etc/dpkg/dpkg.cfg.d/docker-apt-speedup \
+\
+&& echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > /etc/apt/apt.conf.d/docker-clean \
+&& echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> /etc/apt/apt.conf.d/docker-clean \
+&& echo 'Dir::Cache::pkgcache ""; Dir::Cache::srcpkgcache "";' >> /etc/apt/apt.conf.d/docker-clean \
+\
+&& echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/docker-no-languages \
+\
+&& echo 'Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/docker-gzip-indexes
+# enable the universe
+RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
+RUN apt-get update && apt-get -y upgrade && apt-get autoremove && apt-get clean
+
+# --- https://github.com/ioft/dockerhub/blob/master/i386-ubuntu/Dockerfile
 
 # update ubuntu software repository
-RUN apt-get update
+RUN dpkg --add-architecture i386 && \
+  apt-get update && apt-get -y install \
+    libc6:i386 \
+    libstdc++6:i386 \
+    libbz2-dev:i386 \
+    libexpat1-dev:i386 \
+    ncurses-dev:i386
 
 # install necessary tools
-RUN apt-get install -y git subversion build-essential wget curl samba nfs-kernel-server
-RUN apt-get install -y sudo vim tzdata
-RUN apt-get install -y u-boot-tools cpio bc
+RUN apt-get install -y \
+    apt-utils \
+    subversion \
+    build-essential \
+    wget \
+    curl \
+    vim \
+    tzdata \
+    u-boot-tools \
+    cpio \
+    bc \
+    bison \
+    flex \
+    sharutils \
+    libz-dev \
+    libncurses5-dev \
+    iputils-ping \
+    gcc-multilib \
+    g++-multilib \
+    sudo
 
 # add user
 RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
@@ -309,11 +358,19 @@ CMD ["su", "user", "-c", "/bin/bash"]
 # set up working directory
 WORKDIR /home/user
 ENV HOME /home/user
+
+# set timezone
+#ENV TZ=Asia/Taipei
+#RUN dpkg-reconfigure -f noninteractive tzdata
+
+# overwrite this with 'CMD []' in a dependent Dockerfile
+CMD ["su", "user", "-c", "/bin/bash"]
+ENTRYPOINT ["linux32", "--"]
 ```
 
 2. build docker image from dockerfile.
 ```
-docker build -f ubt1604_dhpw310ava1.dockerfile -t alphadocker/ubt1604_dhpw310ava1:0.01 .
+docker build -f ubt1404-i386_dhpw310ava1.dockerfile -t alphadocker/ubt1404-i386_dhpw310ava1:0.01 .
 ```
 
 - list the images.
@@ -322,56 +379,42 @@ docker images
 ```
 ```
 REPOSITORY                        TAG                 IMAGE ID            CREATED             SIZE
-alphadocker/ubt1604_dhpw310ava1   0.01                ea55005d7402        4 months ago        539MB
-alphadocker/ubt1604_hc1892_user   0.02                ea55005d7402        4 months ago        539MB
-ubuntu                            16.04               747cb2d60bbe        4 months ago        122MB
-ubuntu                            14.04               302fa07d8117        10 months ago       188MB
-ubuntu                            10.04               e21dbcc7c9de        3 years ago         183MB
+alphadocker/ubt1404-i386_dhpw310ava1   0.01                4d47abe48f15        7 seconds ago       664MB
+alphadocker/ubt1604_hc1892_user        0.02                ea55005d7402        4 months ago        539MB
+ubuntu                                 16.04               747cb2d60bbe        4 months ago        122MB
+ubuntu                                 14.04               302fa07d8117        10 months ago       188MB
+ioft/i386-ubuntu_core                  latest              58406a7c6c6f        21 months ago       119MB
+ubuntu                                 10.04               e21dbcc7c9de        3 years ago         183MB
 ```
 
 3. create a container from the created image.
 - create a container.
 ```
-docker create -it --name ubt1604_dhpw310ava1 --dns 172.19.10.100 alphadocker/ubt1604_dhpw310ava1:0.01
+docker create -it --name ubt1404-i386_dhpw310ava1 --dns 172.19.10.100 alphadocker/ubt1404-i386_dhpw310ava1:0.01
 ```
 
 - or to mount a host folder to the container.
 ```
-docker create -it --name ubt1604_dhpw310ava1 --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1604_dhpw310ava1:0.01
+docker create -it --name ubt1404-i386_dhpw310ava1 --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1404-i386_dhpw310ava1:0.01
 ```
 
 - start the container.
 ```
-docker start ubt1604_dhpw310ava1
+docker start ubt1404-i386_dhpw310ava1
 ```
 
 - execute the container.
 ```
-docker exec -it ubt1604_dhpw310ava1 su user -c /bin/bash
+docker exec -it ubt1404-i386_dhpw310ava1 linux32 -- su user
 ```
-
-- note: use **docker run** to create and run a container may cause **fakeroot** forcing to exit the container.
-```
-jacob_shih:containers$ docker run -it --name ubt1604_dhpw310ava1_0302 --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo:/home/user/repo alphadocker/ubt1604_dhpw310ava1_0302:0.01
-bash: cannot set terminal process group (-1): Inappropriate ioctl for device
-bash: no job control in this shell
-user@841eb4aba2e5:~$
-user@841eb4aba2e5:~$
-user@841eb4aba2e5:~$ fakeroot ls -l
-total 4
-drwxrwxr-x 6 root root 4096 Oct 31 02:27 repo
-jacob_shih:containers$
-```
-
-- **docker run** vs **docker exec**
-
-  [https://stackoverflow.com/a/35592000](https://stackoverflow.com/a/35592000)
 
 4. working.
 - reconfigure timezone in new container.
 ```
 sudo dpkg-reconfigure tzdata
 ```
+
+- install toolchain
 
 - check out source code and build it.
 ```
@@ -382,12 +425,12 @@ make
 
 5. save the image to tar file.
 ```
-docker save -o ubt1604_dhpw310ava1-0.01.tar alphadocker/ubt1604_dhpw310ava1:0.01
+docker save -o ubt1604-32_dhpw310ava1-0.01.tar alphadocker/ubt1604-32_dhpw310ava1:0.01
 ```
 
 6. load the saved image (from another host maybe...)
 ```
-docker load --input ubt1604_dhpw310ava1-0.01.tar
+docker load --input ubt1604-32_dhpw310ava1-0.01.tar
 ```
 
 7. show the history of the image.
