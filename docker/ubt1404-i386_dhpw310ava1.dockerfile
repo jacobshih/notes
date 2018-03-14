@@ -56,6 +56,19 @@ RUN apt-get install -y \
     iputils-ping \
     gcc-multilib \
     g++-multilib \
+    binutils \
+    patch \
+    bzip2 \
+    gettext \
+    pkg-config \
+    unzip \
+    zlib1g-dev \
+    zlib1g-dev:i386 \
+    libc6-dev \
+    gawk \
+    libxml-parser-perl \
+    ocaml-nox \
+    cmake \
     sudo
 
 # add user
