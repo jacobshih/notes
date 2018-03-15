@@ -56,6 +56,10 @@ RUN apt-get install -y \
     iputils-ping \
     gcc-multilib \
     g++-multilib \
+    sudo
+
+RUN dpkg --add-architecture i386 && \
+  apt-get update && apt-get -y install \
     binutils \
     patch \
     bzip2 \
@@ -68,8 +72,7 @@ RUN apt-get install -y \
     gawk \
     libxml-parser-perl \
     ocaml-nox \
-    cmake \
-    sudo
+    cmake
 
 # add user
 RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
