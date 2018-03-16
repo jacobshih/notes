@@ -4,7 +4,7 @@
 1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](#create_ubuntu_1404_container_for_arm_toolchain)
 1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
 1. [create a ubuntu 16.04 container for hc1892 sdk](#create_ubuntu_1604_container_for_hc1892_sdk)
-1. [create a ubuntu 14.04 container for dhpw310ava1](#create_ubuntu_1404_container_for_dhpw310ava1)
+1. [create a ubuntu 14.04 container for dhpw310av](#create_ubuntu_1404_container_for_dhpw310av)
 
 ---
 
@@ -274,10 +274,10 @@ IMAGE               CREATED             CREATED BY                              
 ```
 
 ---
-<a name="create_ubuntu_1404_container_for_dhpw310ava1" />
+<a name="create_ubuntu_1404_container_for_dhpw310av" />
 
-### create a ubuntu 14.04 container for dhpw310ava1
-1. create a dockerfile for dhpw310ava1.
+### create a ubuntu 14.04 container for dhpw310av
+1. create a dockerfile for dhpw310av.
 ```
 # FROM ioft/i386-ubuntu_core
 FROM ubuntu:14.04
@@ -339,6 +339,22 @@ RUN apt-get install -y \
     g++-multilib \
     sudo
 
+RUN dpkg --add-architecture i386 && \
+  apt-get update && apt-get -y install \
+    binutils \
+    patch \
+    bzip2 \
+    gettext \
+    pkg-config \
+    unzip \
+    zlib1g-dev \
+    zlib1g-dev:i386 \
+    libc6-dev \
+    gawk \
+    libxml-parser-perl \
+    ocaml-nox \
+    cmake
+
 # add user
 RUN useradd -c 'docker user' -m -d /home/user -s /bin/bash user
 
@@ -370,7 +386,7 @@ ENTRYPOINT ["linux32", "--"]
 
 2. build docker image from dockerfile.
 ```
-docker build -f ubt1404-i386_dhpw310ava1.dockerfile -t alphadocker/ubt1404-i386_dhpw310ava1:0.01 .
+docker build -f ubt1404-i386_dhpw310ava1.dockerfile -t alphadocker/ubt1404-i386_dhpw310av:0.01 .
 ```
 
 - list the images.
@@ -378,34 +394,33 @@ docker build -f ubt1404-i386_dhpw310ava1.dockerfile -t alphadocker/ubt1404-i386_
 docker images
 ```
 ```
-REPOSITORY                        TAG                 IMAGE ID            CREATED             SIZE
-alphadocker/ubt1404-i386_dhpw310ava1   0.01                4d47abe48f15        7 seconds ago       664MB
-alphadocker/ubt1604_hc1892_user        0.02                ea55005d7402        4 months ago        539MB
-ubuntu                                 16.04               747cb2d60bbe        4 months ago        122MB
-ubuntu                                 14.04               302fa07d8117        10 months ago       188MB
-ioft/i386-ubuntu_core                  latest              58406a7c6c6f        21 months ago       119MB
-ubuntu                                 10.04               e21dbcc7c9de        3 years ago         183MB
+REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+alphadocker/ubt1404-i386_dhpw310av   0.01                63925666b542        10 minutes ago      851MB
+alphadocker/ubt1604_hc1892_user      0.02                ea55005d7402        4 months ago        539MB
+ubuntu                               16.04               747cb2d60bbe        5 months ago        122MB
+ubuntu                               14.04               302fa07d8117        11 months ago       188MB
+ubuntu                               10.04               e21dbcc7c9de        3 years ago         183MB
 ```
 
 3. create a container from the created image.
 - create a container.
 ```
-docker create -it --name ubt1404-i386_dhpw310ava1 --dns 172.19.10.100 alphadocker/ubt1404-i386_dhpw310ava1:0.01
+docker create -it --name ubt1404-i386_dhpw310av --dns 172.19.10.100 alphadocker/ubt1404-i386_dhpw310ava1:0.01
 ```
 
 - or to mount a host folder to the container.
 ```
-docker create -it --name ubt1404-i386_dhpw310ava1 --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1404-i386_dhpw310ava1:0.01
+docker create -it --name ubt1404-i386_dhpw310av --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1404-i386_dhpw310av:0.01
 ```
 
 - start the container.
 ```
-docker start ubt1404-i386_dhpw310ava1
+docker start ubt1404-i386_dhpw310av
 ```
 
 - execute the container.
 ```
-docker exec -it ubt1404-i386_dhpw310ava1 linux32 -- su user
+docker exec -it ubt1404-i386_dhpw310av linux32 -- su user
 ```
 
 4. working.
@@ -425,12 +440,12 @@ make
 
 5. save the image to tar file.
 ```
-docker save -o ubt1604-32_dhpw310ava1-0.01.tar alphadocker/ubt1604-32_dhpw310ava1:0.01
+docker save -o ubt1404-i386_dhpw310av-0.01.tar alphadocker/ubt1404-i386_dhpw310av:0.01
 ```
 
 6. load the saved image (from another host maybe...)
 ```
-docker load --input ubt1604-32_dhpw310ava1-0.01.tar
+docker load --input ubt1404-i386_dhpw310av-0.01.tar
 ```
 
 7. show the history of the image.
@@ -439,26 +454,31 @@ Usage:  docker history [OPTIONS] IMAGE
 ```
 
 ```
+$ docker history alphadocker/ubt1404-i386_dhpw310av:0.01 
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
-ea55005d7402        4 months ago        /bin/sh -c #(nop)  ENV HOME=/home/user          0B
-107cd5aa0a97        4 months ago        /bin/sh -c #(nop) WORKDIR /home/user            0B
-76feef95d719        4 months ago        /bin/sh -c #(nop)  CMD ["su" "user" "-c" "...   0B
-49eedff20695        4 months ago        /bin/sh -c cp /etc/skel/.bashrc /home/user...   3.77kB
-05dba95aca8f        4 months ago        /bin/sh -c echo no | dpkg-reconfigure dash      1.57MB
-ce94764758d7        4 months ago        /bin/sh -c chmod 0440 /etc/sudoers.d/user       29B
-99c30131bc03        4 months ago        /bin/sh -c echo "user ALL=(root) NOPASSWD:...   29B
-ec151808ff98        4 months ago        /bin/sh -c useradd -c 'docker user' -m -d ...   336kB
-de143cdbf249        4 months ago        /bin/sh -c apt-get install -y u-boot-tools...   1.64MB
-6dca43a338a8        4 months ago        /bin/sh -c apt-get install -y sudo vim tzdata   52.3MB
-018ed3e438eb        4 months ago        /bin/sh -c apt-get install -y git subversi...   322MB
-1ca0a1cab407        4 months ago        /bin/sh -c apt-get update                       39.2MB
-04e809dd1ec3        4 months ago        /bin/sh -c #(nop)  MAINTAINER jacob_shih        0B
-747cb2d60bbe        4 months ago        /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B
-<missing>           4 months ago        /bin/sh -c mkdir -p /run/systemd && echo '...   7B
-<missing>           4 months ago        /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   2.76kB
-<missing>           4 months ago        /bin/sh -c rm -rf /var/lib/apt/lists/*          0B
-<missing>           4 months ago        /bin/sh -c set -xe   && echo '#!/bin/sh' >...   745B
-<missing>           4 months ago        /bin/sh -c #(nop) ADD file:5b334adf9d9a225...   122MB
+63925666b542        12 minutes ago      /bin/sh -c #(nop)  ENTRYPOINT ["linux32" "...   0B                  
+16d53a898b9f        12 minutes ago      /bin/sh -c #(nop)  CMD ["su" "user" "-c" "...   0B                  
+a5d3ea1aace1        12 minutes ago      /bin/sh -c #(nop)  ENV HOME=/home/user          0B                  
+5a971ab0f96a        12 minutes ago      /bin/sh -c #(nop) WORKDIR /home/user            0B                  
+b62d1e399cb9        12 minutes ago      /bin/sh -c #(nop)  CMD ["su" "user" "-c" "...   0B                  
+3dceb5457d1c        12 minutes ago      /bin/sh -c cp /etc/skel/.bashrc /home/user...   3.64kB              
+6329b289a14d        12 minutes ago      /bin/sh -c echo no | dpkg-reconfigure dash      2.76MB              
+84ef3418cd03        12 minutes ago      /bin/sh -c chmod 0440 /etc/sudoers.d/user       29B                 
+b9fb7322573a        12 minutes ago      /bin/sh -c echo "user ALL=(root) NOPASSWD:...   29B                 
+d5c3eb3a2a7c        12 minutes ago      /bin/sh -c useradd -c 'docker user' -m -d ...   334kB               
+a7e394b514f5        13 minutes ago      /bin/sh -c dpkg --add-architecture i386 &&...   187MB               
+864ab5a649a7        10 days ago         /bin/sh -c apt-get install -y     apt-util...   224MB               
+4af3084039ed        10 days ago         /bin/sh -c dpkg --add-architecture i386 &&...   115MB               
+b91bbbd75d09        10 days ago         /bin/sh -c apt-get update && apt-get -y up...   134MB               
+f150027657e7        10 days ago         /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   1.9kB               
+7bc6ae465995        10 days ago         /bin/sh -c echo '#!/bin/sh' > /usr/sbin/po...   467B                
+041954523f16        10 days ago         /bin/sh -c #(nop)  MAINTAINER jacob_shih "...   0B                  
+302fa07d8117        11 months ago       /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B                  
+<missing>           11 months ago       /bin/sh -c mkdir -p /run/systemd && echo '...   7B                  
+<missing>           11 months ago       /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   1.9kB               
+<missing>           11 months ago       /bin/sh -c rm -rf /var/lib/apt/lists/*          0B                  
+<missing>           11 months ago       /bin/sh -c set -xe   && echo '#!/bin/sh' >...   195kB               
+<missing>           11 months ago       /bin/sh -c #(nop) ADD file:cd830d3aacc66aa...   188MB               
 ```
 
 
