@@ -386,7 +386,7 @@ ENTRYPOINT ["linux32", "--"]
 
 2. build docker image from dockerfile.
 ```
-docker build -f ubt1404-i386_dhpw310ava1.dockerfile -t alphadocker/ubt1404-i386_dhpw310av:0.01 .
+docker build -f ubt1404-i386_dhpw310av.dockerfile -t alphadocker/ubt1404-i386_dhpw310av:0.01 .
 ```
 
 - list the images.
@@ -405,7 +405,7 @@ ubuntu                               10.04               e21dbcc7c9de        3 y
 3. create a container from the created image.
 - create a container.
 ```
-docker create -it --name ubt1404-i386_dhpw310av --dns 172.19.10.100 alphadocker/ubt1404-i386_dhpw310ava1:0.01
+docker create -it --name ubt1404-i386_dhpw310av --dns 172.19.10.100 alphadocker/ubt1404-i386_dhpw310av:0.01
 ```
 
 - or to mount a host folder to the container.
