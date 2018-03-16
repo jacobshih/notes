@@ -1,12 +1,13 @@
 
 # docker
 
+1. [references](#references)
 1. [docker basic](#docker_basic)
-2. [install docker](#install_docker)
+1. [install docker](#install_docker)
    1. [set up docker repository](#set_up_docker_repository)
    1. [install docker ce](#install_docker_ce)
 
-3. [basic docker operations](#basic_docker_operations)
+1. [basic docker operations](#basic_docker_operations)
    1. [list docker images](#list_docker_images)
    1. [run a docker and check ubuntu version of docker image](#run_a_docker_and_check_ubuntu_version_of_docker_image)
    1. [create a container](#create_a_container)
@@ -22,13 +23,19 @@
    1. [load image](#load_image)
    1. [show history of image](#show_history_of_image)
 
-4. [examples](docker_examples.md)
+1. [examples](docker_examples.md)
    1. [create a ubuntu 14.04 container for arm 4.3.2 toolchain](docker_examples.md#create_ubuntu_1404_container_for_arm_toolchain)
    1. [create a ubuntu 16.04 container for meson build system](docker_examples.md#create_ubuntu_1604_container_for_meson_build_system)
    1. [create a ubuntu 16.04 container for hc1892 sdk](docker_examples.md#create_ubuntu_1604_container_for_hc1892_sdk)
    1. [create a ubuntu 14.04 container for dhpw310av](docker_examples.md#create_ubuntu_1404_container_for_dhpw310av)
 
 ---
+
+<a name="references" />
+
+## references
+* [docker_practice](https://philipzheng.gitbooks.io/docker_practice/content/)
+* [docker_theory_install](https://joshhu.gitbooks.io/docker_theory_install/content/)
 
 <a name="docker_basic" />
 
