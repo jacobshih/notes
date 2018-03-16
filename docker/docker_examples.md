@@ -443,7 +443,14 @@ make
 docker save -o ubt1404-i386_dhpw310av-0.01.tar alphadocker/ubt1404-i386_dhpw310av:0.01
 ```
 
-6. load the saved image (from another host maybe...)
+- the saved docker image file
+
+```
+jacob_shih:images$ ls -l ubt1404-i386_dhpw310av-0.01.tar 
+-rw------- 1 jacob_shih jacob_shih 877150208 Mar 16 11:54 ubt1404-i386_dhpw310av-0.01.tar
+```
+
+6. load the saved image
 ```
 docker load --input ubt1404-i386_dhpw310av-0.01.tar
 ```
