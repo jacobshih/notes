@@ -37,7 +37,8 @@ RUN dpkg --add-architecture i386 && \
     ncurses-dev:i386
 
 # install necessary tools
-RUN apt-get install -y \
+RUN dpkg --add-architecture i386 && \
+  apt-get update && apt-get -y install \
     apt-utils \
     subversion \
     build-essential \
@@ -86,6 +87,12 @@ RUN echo no | dpkg-reconfigure dash
 
 # initialize the user profile from the skeleton profile
 RUN cp /etc/skel/.bashrc /home/user/.bashrc
+
+# install toolchain
+RUN svn co http://172.19.176.76/repos/Seattle/w310av_AP100beta/boards/hpw310av_ath/toolchain/ \
+  && tar zxvf toolchain/mips-db120-gcc-4.3.3-2.19.1_v004.tgz -C / \
+  && rm -rf toolchain
+
 
 # run as a user
 CMD ["su", "user", "-c", "/bin/bash"]
