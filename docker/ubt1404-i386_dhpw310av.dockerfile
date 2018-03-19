@@ -27,7 +27,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get autoremove && apt-get clean
 
 # --- https://github.com/ioft/dockerhub/blob/master/i386-ubuntu/Dockerfile
 
-# update ubuntu software repository
+# install necessary tools
 RUN dpkg --add-architecture i386 && \
   apt-get update && apt-get -y install \
     libc6:i386 \
@@ -36,7 +36,6 @@ RUN dpkg --add-architecture i386 && \
     libexpat1-dev:i386 \
     ncurses-dev:i386
 
-# install necessary tools
 RUN dpkg --add-architecture i386 && \
   apt-get update && apt-get -y install \
     apt-utils \
@@ -93,6 +92,12 @@ RUN svn co http://172.19.176.76/repos/Seattle/w310av_AP100beta/boards/hpw310av_a
   && tar zxvf toolchain/mips-db120-gcc-4.3.3-2.19.1_v004.tgz -C / \
   && rm -rf toolchain
 
+# patch toolchain
+# to fix socket.h error expected initializer before 'throw'
+# http://lists.busybox.net/pipermail/uclibc/2008-December/041567.html
+RUN cd /opt/mips-db120-gcc-4.3.3-2.19.1_v004/usr/include/bits/ \
+  && sed -i '271 s/__NTH (//' socket.h \
+  && sed -i '272 s/__cmsg))/__cmsg)/' socket.h
 
 # run as a user
 CMD ["su", "user", "-c", "/bin/bash"]
