@@ -111,5 +111,4 @@ ENV HOME /home/user
 #RUN dpkg-reconfigure -f noninteractive tzdata
 
 # overwrite this with 'CMD []' in a dependent Dockerfile
-CMD ["su", "user", "-c", "/bin/bash"]
 ENTRYPOINT ["linux32", "--"]
