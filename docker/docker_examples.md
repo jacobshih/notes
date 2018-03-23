@@ -5,6 +5,7 @@
 1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
 1. [create a ubuntu 16.04 container for hc1892 sdk](#create_ubuntu_1604_container_for_hc1892_sdk)
 1. [create a ubuntu 14.04 container for dhpw310av](#create_ubuntu_1404_container_for_dhpw310av)
+1. [ftp server](#ftp_server)
 
 ---
 
@@ -126,6 +127,7 @@ docker load --input ubt1604_meson_anpm.tar
 ```
 
 ---
+
 <a name="create_ubuntu_1604_container_for_hc1892_sdk" />
 
 ### create a ubuntu 16.04 container for hc1892 sdk
@@ -274,6 +276,7 @@ IMAGE               CREATED             CREATED BY                              
 ```
 
 ---
+
 <a name="create_ubuntu_1404_container_for_dhpw310av" />
 
 ### create a ubuntu 14.04 container for dhpw310av
@@ -385,4 +388,12 @@ f150027657e7        10 days ago         /bin/sh -c sed -i 's/^#\s*\(deb.*univers
 <missing>           11 months ago       /bin/sh -c #(nop) ADD file:cd830d3aacc66aa...   188MB               
 ```
 
+---
 
+<a name="ftp_server" />
+
+### ftp server
+
+```
+docker run -d -v /home/jacob_shih/volumes/pub/ftp/:/home/vsftpd -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=user -e FTP_PASS=1234 -e PASV_ADDRESS=2.10.86.222 --name ftp --restart=always bogem/ftp
+```
