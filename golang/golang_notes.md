@@ -69,6 +69,31 @@ sudo apt-get install golang
     sudo mv bin/godef $(go env GOROOT)/bin
     ```
 
+    * install govendor
+
+    ```
+    go get -u github.com/kardianos/govendor
+    ```
+
+        * list and filter existing dependencies and packages.
+
+        ```
+        govendor list
+        ```
+
+        * add referenced packages
+
+        ```
+        govendor add +external
+        ```
+
+        * pull referenced packages and update vendor.json file.
+
+        ```
+        govendor sync
+        ```
+
+
 * goclipse configuration
 
     * eclipse -> window -> preference -> go -> tools
@@ -196,4 +221,12 @@ helloworld
 ```
 
 ---
+
+## learn to go
+
+### Go lang Addresses, Pointers and Types
+
+[Go lang Addresses, Pointers and Types](https://stackoverflow.com/a/24623251)
+
+
 
