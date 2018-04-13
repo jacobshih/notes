@@ -35,3 +35,13 @@ git add .
 ```
 
 ---
+
+## resources
+
+1. sticker list for line bot
+
+[sticker list](https://devdocs.line.me/files/sticker_list.pdf)
+
+---
+
+
