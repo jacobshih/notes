@@ -62,4 +62,19 @@ user@c6953705ddd9:~/herokugo/src/jxlbot$ git commit -m 'What - [jxlbot] add a fu
 user@c6953705ddd9:~/herokugo/src/jxlbot$ git push heroku master
 ```
 
+* manage external thirdparty packages
+
+    * use govendor to update the file vendor.json and commit to heroku.
+
+```
+govendor list
+govendor add +external
+govendor sync
+govendor list
+```
+
+    * [managing dependencies with govendor](https://jonathanmh.com/managing-dependencies-govendor-heroku-dokku/)
+
+---
+
 
