@@ -35,7 +35,8 @@ sudo apt-get install golang
 
 * install eclipse
 
-    * [download eclipse](https://www.eclipse.org/downloads/download.php?file=/oomph/epp/oxygen/R2/eclipse-inst-linux64.tar.gz)
+    * [download eclipse (64 bits)](https://www.eclipse.org/downloads/download.php?file=/oomph/epp/oxygen/R2/eclipse-inst-linux64.tar.gz)
+    * [download eclipse (32 bits)](https://www.eclipse.org/downloads/download.php?file=/oomph/epp/oxygen/R2/eclipse-inst-linux32.tar.gz)
 
 * install goclipse
 
