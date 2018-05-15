@@ -5,6 +5,7 @@
 1. [install go](#install_go)
 1. [go ide](#go_ide)
 1. [go docker](#go_docker)
+1. [learn to go](#learn_to_go)
 1. [hello world](#hello_world)
 
 ---
@@ -178,6 +179,32 @@ docker exec -it golang su user
 
 ---
 
+<a name="learn_to_go" />
+
+## learn to go
+
+### The Go Playground
+
+[The Go Playground](https://play.golang.org/)
+
+### Go lang Addresses, Pointers and Types
+
+[Go lang Addresses, Pointers and Types](https://stackoverflow.com/a/24623251)
+
+### JSON and Go
+
+[Looping/iterate over the second level nested JSON in go lang](https://stackoverflow.com/questions/29366038/looping-iterate-over-the-second-level-nested-json-in-go-lang)
+
+### Build Web Application with Golang
+
+[Build Web Application with Golang](https://legacy.gitbook.com/book/astaxie/build-web-application-with-golang)
+
+### Pointer vs Non-Pointer Method Receivers
+
+[Don't Get Bitten by Pointer vs Non-Pointer Method Receivers in Golang](https://nathanleclaire.com/blog/2014/08/09/dont-get-bitten-by-pointer-vs-non-pointer-method-receivers-in-golang/)
+
+---
+
 <a name="hello_world" />
 
 ## hello world
@@ -220,14 +247,4 @@ user@golang:~/go$ go install helloworld
 user@golang:~/go$ ls bin/
 helloworld
 ```
-
----
-
-## learn to go
-
-### Go lang Addresses, Pointers and Types
-
-[Go lang Addresses, Pointers and Types](https://stackoverflow.com/a/24623251)
-
-
 
