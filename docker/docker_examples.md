@@ -5,6 +5,7 @@
 1. [create a ubuntu 16.04 container for meson build system](#create_ubuntu_1604_container_for_meson_build_system)
 1. [create a ubuntu 16.04 container for hc1892 sdk](#create_ubuntu_1604_container_for_hc1892_sdk)
 1. [create a ubuntu 14.04 container for dhpw310av](#create_ubuntu_1404_container_for_dhpw310av)
+1. [create a ubuntu 16.04 container for buildroot](#create_ubuntu_1604_container_for_buildroot)
 1. [ftp server](#ftp_server)
 
 ---
@@ -386,6 +387,119 @@ f150027657e7        10 days ago         /bin/sh -c sed -i 's/^#\s*\(deb.*univers
 <missing>           11 months ago       /bin/sh -c rm -rf /var/lib/apt/lists/*          0B                  
 <missing>           11 months ago       /bin/sh -c set -xe   && echo '#!/bin/sh' >...   195kB               
 <missing>           11 months ago       /bin/sh -c #(nop) ADD file:cd830d3aacc66aa...   188MB               
+```
+
+---
+
+<a name="create_ubuntu_1604_container_for_buildroot" />
+
+### create a ubuntu 16.04 container for buildroot
+1. create a dockerfile for buildroot.
+
+ [ubt1604_buildroot.dockerfile](ubt1604_buildroot.dockerfile)
+
+2. build docker image from dockerfile.
+```
+docker build -f ubt1604_buildroot.dockerfile -t alphadocker/ubt1604_buildroot:0.01 .
+```
+
+- list the images.
+```
+docker images
+```
+```
+REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+alphadocker/ubt1604_buildroot        0.01                019d706d9aab        2 minutes ago       617MB
+ubuntu                               16.04               747cb2d60bbe        7 months ago        122MB
+ubuntu                               14.04               302fa07d8117        13 months ago       188MB
+ubuntu                               10.04               e21dbcc7c9de        4 years ago         183MB
+```
+
+3. create a container from the created image.
+- create a container.
+```
+docker create -it --name ubt1604_buildroot --dns 172.19.10.100 alphadocker/ubt1604_buildroot:0.01
+```
+
+- or to mount a host folder to the container.
+```
+docker create -it --name ubt1604_buildroot --dns 172.19.10.100 -v /home/jacob_shih/volumes/repo/:/home/user/repo alphadocker/ubt1604_buildroot:0.01
+```
+
+- start the container.
+```
+docker start ubt1604_buildroot
+```
+
+- execute the container.
+```
+docker exec -it ubt1604_buildroot su user
+```
+
+4. working.
+
+- create ssh key for gitlab access.
+
+- copy the keys for building ipcam firmware.
+
+- install the toolchain.
+
+- check out source code and build it.
+```
+git clone git@gitlab.alphanetworks.com:ipcam/products/buildroot.git
+cd buildroot
+make dcs8350lh_defconfig
+make
+```
+
+5. save the image to tar file.
+```
+docker save -o ubt1604_buildroot-0.01.tar alphadocker/ubt1604_buildroot:0.01
+```
+
+- the saved docker image file
+
+```
+jacob_shih:images$ ls -l ubt1604_buildroot-0.01.tar
+-rw------- 1 jacob_shih jacob_shih 567625728 May 17 11:26 ubt1604_buildroot-0.01.tar
+```
+
+6. load the saved image
+```
+docker load --input ubt1604_buildroot-0.01.tar
+```
+
+7. show the history of the image.
+```
+Usage:  docker history [OPTIONS] IMAGE
+```
+
+```
+$ docker history alphadocker/ubt1604_buildroot:0.01
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+e49da8d30608        18 minutes ago      /bin/sh -c dpkg-reconfigure -f noninteract...   1.24MB
+bacc181508d9        18 minutes ago      /bin/sh -c #(nop)  ENV TZ=Asia/Taipei           0B
+7cfebf6552d8        18 minutes ago      /bin/sh -c #(nop)  ENV HOME=/home/user          0B
+c34cceb4e07d        18 minutes ago      /bin/sh -c #(nop) WORKDIR /home/user            0B
+061f777c6911        18 minutes ago      /bin/sh -c #(nop)  CMD ["su" "user" "-c" "...   0B
+60ce4f46752c        18 minutes ago      /bin/sh -c cp /etc/skel/.bashrc /home/user...   3.77kB
+eb0274b52541        19 minutes ago      /bin/sh -c echo no | dpkg-reconfigure dash      1.24MB
+4e8ce5991183        19 minutes ago      /bin/sh -c chmod 0440 /etc/sudoers.d/user       29B
+2df934dc15ad        19 minutes ago      /bin/sh -c echo "user ALL=(root) NOPASSWD:...   29B
+e7bf78db0d06        19 minutes ago      /bin/sh -c useradd -c 'docker user' -m -d ...   335kB
+356ba5777571        19 minutes ago      /bin/sh -c echo install googletest;     cd...   8.96MB
+001b8c1623e2        19 minutes ago      /bin/sh -c apt-get install -y     wget    ...   52.8MB
+3fd5e06f7fba        20 minutes ago      /bin/sh -c apt-get install -y     automake...   193MB
+f2c7a3533367        21 minutes ago      /bin/sh -c apt-get install -y git subversi...   129MB
+135850d74696        20 hours ago        /bin/sh -c apt-get update                       40.3MB
+06965b28c21b        20 hours ago        /bin/sh -c #(nop) WORKDIR /home                 0B
+04e809dd1ec3        7 months ago        /bin/sh -c #(nop)  MAINTAINER jacob_shih        0B
+747cb2d60bbe        7 months ago        /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B
+<missing>           7 months ago        /bin/sh -c mkdir -p /run/systemd && echo '...   7B
+<missing>           7 months ago        /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   2.76kB
+<missing>           7 months ago        /bin/sh -c rm -rf /var/lib/apt/lists/*          0B
+<missing>           7 months ago        /bin/sh -c set -xe   && echo '#!/bin/sh' >...   745B
+<missing>           7 months ago        /bin/sh -c #(nop) ADD file:5b334adf9d9a225...   122MB
 ```
 
 ---
