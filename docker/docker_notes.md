@@ -23,7 +23,7 @@
    1. [load image](#load_image)
    1. [show history of image](#show_history_of_image)
 
-1. [misc]
+1. misc
    1. [Solving Docker permission denied](#permission_denied)
 
 1. [examples](docker_examples.md)
